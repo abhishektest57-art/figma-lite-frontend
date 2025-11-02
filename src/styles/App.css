@@ -1,0 +1,135 @@
+/* App layout roots: most styles moved to ui-panels.css for consistency. */
+
+.app-root {
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(120deg, #f8fafc 70%, #e0e7ef 100%);
+  overflow: hidden;
+}
+.app-loading {
+  padding: 2rem;
+  font-size: 1.3rem;
+  color: #34495e;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+/* Panel and editor flex sizing rules for horizontal non-overlapping layout */
+.app-root > .layer-panel {
+  flex: 0 0 260px;
+  min-width: 180px;
+  max-width: 360px;
+  background: #f4f6fa;
+  border-right: 1px solid #e0e4ea;
+  overflow-y: auto;
+  z-index: 1;
+  transition: flex-basis 0.22s, min-width 0.22s, max-width 0.22s;
+}
+.app-root > .layer-panel.minimized {
+  flex: 0 0 64px;
+  min-width: 0 !important;
+  max-width: 64px;
+  overflow-x: hidden;
+  padding: 0;
+}
+.app-root > .canvas-editor-wrapper {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  background: #fff;
+  z-index: 0;
+}
+.app-root > .comment-panel {
+  flex: 0 0 320px;
+  min-width: 200px;
+  max-width: 400px;
+  background: #f9fafb;
+  border-left: 1px solid #e0e4ea;
+  overflow-y: auto;
+  z-index: 2;
+  transition: flex-basis 0.2s, min-width 0.2s, max-width 0.2s;
+}
+.app-root > .comment-panel.minimized {
+  flex: 0 0 100px;
+  min-width: 0 !important;
+  max-width: 100px;
+  overflow-x: hidden;
+  padding: 0;
+}
+@media (max-width: 800px) {
+  .app-root > .comment-panel {
+    display: none;
+  }
+}
+
+
+canvas.upper-canvas {
+  z-index: 2 !important;
+  pointer-events: auto !important;
+}
+canvas.lower-canvas {
+  z-index: 1 !important;
+}
+
+
+/* === New: Absolute Floating Right Overlay Panel (non-destructive append) === */
+
+.floating-right-panel-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  max-width: 98vw;
+  height: 100vh;
+  background: rgba(250, 251, 255, 0.965);
+  box-shadow: -7px 0 32px 0 rgba(44,79,168,0.13), -1px 0 28px 0 rgba(44,79,168,0.11);
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.26s cubic-bezier(0.4,0.01,0.34,1), opacity 0.19s;
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+.floating-right-panel-overlay.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.floating-right-panel-overlay-close {
+  position: absolute;
+  top: 18px;
+  right: 19px;
+  z-index: 1310;
+  width: 38px;
+  height: 38px;
+  background: #fff;
+  border-radius: 50%;
+  border: 1.7px solid #dae3f9;
+  box-shadow: 0 3px 20px 0 rgba(44,79,168,0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.13s, box-shadow 0.14s, border 0.14s;
+}
+.floating-right-panel-overlay-close:hover,
+.floating-right-panel-overlay-close:focus {
+  background: #eff5fa;
+  border-color: #6695ed;
+  box-shadow: 0 6px 28px 0 rgba(70,131,240,0.27);
+}
+.floating-right-panel-overlay-close:focus-visible {
+  outline: 2.4px solid #4176f8;
+  outline-offset: 2.5px;
+}
+@media (max-width: 600px) {
+  .floating-right-panel-overlay {
+    width: 100vw;
+    min-width: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
