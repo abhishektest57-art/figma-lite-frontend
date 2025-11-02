@@ -173,7 +173,7 @@ const CanvasEditor: React.FC<Props> = ({
   // ---------- Listen for colorChange events ----------
   useEffect(() => {
     const s = socket.current;
-    if (!s) return;
+    if (!s) return () => { }; // ✅ always return a valid cleanup
 
     const handleColorChange = ({
       designId: eventDesignId,
@@ -196,8 +196,12 @@ const CanvasEditor: React.FC<Props> = ({
     };
 
     s.on('canvas:colorChange', handleColorChange);
-    return () => s.off('canvas:colorChange', handleColorChange);
+
+    return () => {
+      s.off('canvas:colorChange', handleColorChange);
+    };
   }, [socket, designId]);
+
 
   // ---------- LayerPanel Updates (preserve objects) ----------
   const handleUpdateLayers = (updatedUI: any[]) => {
@@ -218,11 +222,11 @@ const CanvasEditor: React.FC<Props> = ({
       prev.map((l) =>
         l.id === layerId
           ? {
-              ...l,
-              objects: l.objects.map((o) =>
-                o.id === id ? { ...o, x, y } : o
-              ),
-            }
+            ...l,
+            objects: l.objects.map((o) =>
+              o.id === id ? { ...o, x, y } : o
+            ),
+          }
           : l
       )
     );
@@ -238,20 +242,20 @@ const CanvasEditor: React.FC<Props> = ({
       prev.map((l) =>
         l.id === layerId
           ? {
-              ...l,
-              objects: l.objects.map((o) =>
-                o.id === id
-                  ? {
-                      ...o,
-                      x: node.x(),
-                      y: node.y(),
-                      width: node.width() * scaleX,
-                      height: node.height() * scaleY,
-                      rotation: node.rotation(),
-                    }
-                  : o
-              ),
-            }
+            ...l,
+            objects: l.objects.map((o) =>
+              o.id === id
+                ? {
+                  ...o,
+                  x: node.x(),
+                  y: node.y(),
+                  width: node.width() * scaleX,
+                  height: node.height() * scaleY,
+                  rotation: node.rotation(),
+                }
+                : o
+            ),
+          }
           : l
       )
     );
@@ -334,11 +338,11 @@ const CanvasEditor: React.FC<Props> = ({
         prev.map((l) =>
           l.id === layerId
             ? {
-                ...l,
-                objects: l.objects.map((o) =>
-                  o.id === obj.id ? { ...o, text: value } : o
-                ),
-              }
+              ...l,
+              objects: l.objects.map((o) =>
+                o.id === obj.id ? { ...o, text: value } : o
+              ),
+            }
             : l
         )
       );

@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { SocketContext } from './SocketContext';
 
-const URL = 'http://localhost:5001';
+// const URL = 'http://localhost:5001';
+const URL = import.meta.env.VITE_SOCKET_URL;
 
 export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const socketRef = useRef<Socket | null>(null);
